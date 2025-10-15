@@ -9,57 +9,61 @@ namespace csapi.Controllers;
 public class EntryController : ControllerBase
 {
 
-  public EntryController()
-  {    
+  private readonly IEntryService _entryService;
+
+  public EntryController(IEntryService entryService)
+  {
+    _entryService = entryService;
   }
 
   [HttpGet]
-  public ActionResult<List<Entry>> GetAll() =>
-    EntryService.GetAll();
+  public Task<List<Entry>> GetAllAsync() =>
+    _entryService.GetAllAsync();
 
   [HttpGet("{id}")]
-  public ActionResult<Entry> Get(int id)
+  public Task<Entry?> GetAsync(int id)
   {
-    var entry = EntryService.Get(id);
+    var entry = _entryService.GetAsync(id);
 
-    if (entry == null)
-      return NotFound();
+    // if (entry == null)
+    //   return NotFound();
 
     return entry;
   }
 
   [HttpPost]
-  public IActionResult Create(Entry entry)
+  public async Task<IActionResult> CreateAsync([FromBody] Entry entry)
   {
-    EntryService.Add(entry);
-    return CreatedAtAction(nameof(Get), new { id = entry.Id, name = entry.Name, sum = entry.Sum, Date = DateTime.Now }, entry);
+
+    var result = await _entryService.CreateAsync(entry);
+    return Ok(result);
   }
 
-  [HttpPut("{id}")]
-  public IActionResult Update(int id, Entry entry)
-  {
-    if (id != entry.Id)
-      return BadRequest();
+  // [HttpPut("{id}")]
+  // public IActionResult Update(int id, Entry entry)
+  // {
+  //   if (id != entry.Id)
+  //     return BadRequest();
 
-    var existingEntry = EntryService.Get(id);
-    if (existingEntry is null)
-      return NotFound();
+  //   var existingEntry = _entryService.Get(id);
+  //   if (existingEntry is null)
+  //     return NotFound();
 
-    EntryService.Update(entry);
+  //   EntryService.Update(entry);
 
-    return NoContent();
-  }
+  //   return NoContent();
+  // }
 
-  [HttpDelete("{id}")]
-  public IActionResult Delete(int id)
-  {
-    var entry = EntryService.Get(id);
-    if (entry is null)
-      return NotFound();
+  // [HttpDelete("{id}")]
+  // public IActionResult Delete(int id)
+  // {
+  //   var entry = EntryService.Get(id);
+  //   if (entry is null)
+  //     return NotFound();
 
-    EntryService.Delete(id);
-    return NoContent();
-  }
+  //   EntryService.Delete(id);
+  //   return NoContent();
+  // }
 
 
 }

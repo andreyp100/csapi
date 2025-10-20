@@ -16,6 +16,7 @@ public class EntryController : ControllerBase
     _entryService = entryService;
   }
 
+
   [HttpGet]
   public Task<List<Entry>> GetAllAsync() =>
     _entryService.GetAllAsync();
@@ -34,6 +35,8 @@ public class EntryController : ControllerBase
   [HttpPost]
   public async Task<IActionResult> CreateAsync([FromBody] Entry entry)
   {
+    Console.WriteLine($"entry: {entry}");
+
 
     var result = await _entryService.CreateAsync(entry);
     return Ok(result);

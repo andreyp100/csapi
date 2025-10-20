@@ -12,14 +12,8 @@ public class EntryService: IEntryService
 
   public EntryService(AppDbContext context)
   {
-
     _context = context;
 
-    // Entries = new List<Entry>
-    // {
-    //   new Entry {Id = 1, Name = "FirstEntry", Sum = 100, Date = DateTime.Now },
-    //   new Entry {Id = 2, Name = "SecondEntry", Sum = 200, Date = DateTime.Now}
-    // };
   }
 
   public Task<List<Entry>> GetAllAsync() => Task.FromResult(_context.Entries.ToList());
@@ -28,6 +22,18 @@ public class EntryService: IEntryService
 
   public async Task<Entry> CreateAsync(Entry entry)
   {
+    // Console.WriteLine($"entry.Name={entry.Name}");
+    // DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(entry.Date);
+    // DateTime dateTime = dateTimeOffset.UtcDateTime;
+    // Entry newEntry = new()
+    // {
+    //   Date = entry.Date,
+    //   Name = entry.Name,
+    //   Sum = entry.Sum,
+    //   Category = entry.Category
+
+    // };
+
     _context.Entries.Add(entry);
     await _context.SaveChangesAsync();
     return entry;

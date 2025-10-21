@@ -12,8 +12,8 @@ public class Entry
 
 public class EntryDTO
 {
-  public string? Name { get; set; }
-  public float Sum { get; set; }
-  public int Date { get; set; }
-  public string? Category { get; set; }
+  public string? name { get; set; }
+  public int sum { get; set; }
+  public long date { get; set; }
+  public string? category { get; set; }
 }

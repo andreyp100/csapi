@@ -33,9 +33,20 @@ public class EntryController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<IActionResult> CreateAsync([FromBody] Entry entry)
+  public async Task<IActionResult> CreateAsync([FromBody] EntryDTO entrydto)
   {
-    Console.WriteLine($"entry: {entry}");
+
+    DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(entrydto.date);
+    DateTime localDateTime = dateTimeOffset.UtcDateTime;
+
+    Entry entry = new()
+    {
+      Name = entrydto.name,
+      Sum = entrydto.sum,
+      Date = localDateTime,
+      Category = entrydto.category,
+      // DateCreated = DateTime.UtcNow
+    };
 
 
     var result = await _entryService.CreateAsync(entry);

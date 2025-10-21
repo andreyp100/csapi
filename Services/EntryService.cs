@@ -22,17 +22,6 @@ public class EntryService: IEntryService
 
   public async Task<Entry> CreateAsync(Entry entry)
   {
-    // Console.WriteLine($"entry.Name={entry.Name}");
-    // DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(entry.Date);
-    // DateTime dateTime = dateTimeOffset.UtcDateTime;
-    // Entry newEntry = new()
-    // {
-    //   Date = entry.Date,
-    //   Name = entry.Name,
-    //   Sum = entry.Sum,
-    //   Category = entry.Category
-
-    // };
 
     _context.Entries.Add(entry);
     await _context.SaveChangesAsync();

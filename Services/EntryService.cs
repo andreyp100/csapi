@@ -1,47 +1,53 @@
+using System.Threading.Tasks;
 using csapi.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 namespace csapi.Services;
 
-public static class EntryService
+public class EntryService: IEntryService
 {
-  static List<Entry> Entries { get; }
-  static int nextId = 3;
+  // static List<Entry> Entries { get; }
+  // static int nextId = 3;
 
-  static EntryService()
+  private readonly AppDbContext _context;
+
+  public EntryService(AppDbContext context)
   {
-    Entries = new List<Entry>
-    {
-      new Entry {Id = 1, Name = "FirstEntry", Sum = 100, Date = DateTime.Now },
-      new Entry {Id = 2, Name = "SecondEntry", Sum = 200, Date = DateTime.Now}
-    };
+    _context = context;
+
   }
 
-  public static List<Entry> GetAll() => Entries;
-
-  public static Entry? Get(int id) => Entries.FirstOrDefault(e => e.Id == id);
-
-  public static void Add(Entry entry)
+  public Task<List<Entry>> GetAllAsync()
   {
-    entry.Id = nextId++;
-    Entries.Add(entry);
+   return Task.FromResult(_context.Entries.ToList());
+  } 
+
+  public Task<Entry?> GetAsync(int id) => Task.FromResult(_context.Entries.FirstOrDefault(e => e.Id == id));
+
+  public async Task<Entry> CreateAsync(Entry entry)
+  {
+
+    _context.Entries.Add(entry);
+    await _context.SaveChangesAsync();
+    return entry;
   }
 
-  public static void Delete(int id)
-  {
-    var entry = Get(id);
-    if (entry is null)
-      return;
+  // public void Delete(int id)
+  // {
+  //   var entry = GetAsync(id);
+  //   if (entry is null)
+  //     return;
 
-    Entries.Remove(entry);
-  }
+  //   Entries.Remove(entry);
+  // }
 
-  public static void Update(Entry entry)
-  {
-    var index = Entries.FindIndex(e => e.Id == entry.Id);
-    if (index == -1)
-      return;
+  // public static void Update(Entry entry)
+  // {
+  //   var index = Entries.FindIndex(e => e.Id == entry.Id);
+  //   if (index == -1)
+  //     return;
 
-    Entries[index] = entry;
-  }
+  //   Entries[index] = entry;
+  // }
 
 
 

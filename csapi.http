@@ -3,4 +3,13 @@
 GET {{csapi_HostAddress}}/weatherforecast/
 Accept: application/json
 
+GET {{csapi_HostAddress}}/entry
+Accept: application/json
+
+GET {{csapi_HostAddress}}/entry/1
+Accept: application/json
+
+GET {{csapi_HostAddress}}/entry/3
+Accept: application/json
+
 ###

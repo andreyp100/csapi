@@ -36,16 +36,16 @@ public class EntryController : ControllerBase
   public async Task<IActionResult> CreateAsync([FromBody] EntryDTO entrydto)
   {
 
-    DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(entrydto.date);
+    DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(entrydto.Date);
     DateTime localDateTime = dateTimeOffset.UtcDateTime;
 
     Entry entry = new()
     {
-      Name = entrydto.name,
-      Sum = entrydto.sum,
+      Name = entrydto.Name,
+      Sum = entrydto.Sum,
       Date = localDateTime,
-      Category = entrydto.category,
-      // DateCreated = DateTime.UtcNow
+      CategoryId = entrydto.CategoryId,
+      DateCreated = DateTime.UtcNow
     };
 
 

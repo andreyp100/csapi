@@ -16,7 +16,10 @@ public class EntryService: IEntryService
 
   }
 
-  public Task<List<Entry>> GetAllAsync() => Task.FromResult(_context.Entries.ToList());
+  public Task<List<Entry>> GetAllAsync()
+  {
+   return Task.FromResult(_context.Entries.ToList());
+  } 
 
   public Task<Entry?> GetAsync(int id) => Task.FromResult(_context.Entries.FirstOrDefault(e => e.Id == id));
 

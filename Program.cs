@@ -10,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IEntryService, EntryService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 

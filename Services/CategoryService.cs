@@ -1,7 +1,8 @@
 using csapi.Models;
 using csapi.Services;
+using System.Linq;
 
-public class CategoryService: ICategoryService
+public class CategoryService : ICategoryService
 {
   private readonly AppDbContext _context;
 
@@ -10,15 +11,38 @@ public class CategoryService: ICategoryService
     _context = context;
   }
 
-  public Task<List<Category>> GetAllCategoriesAsync()
+  public List<CategoryDTO> ConvertToDTOs(List<Category> categories)
   {
-    return Task.FromResult(_context.Categories.ToList());
+    List<CategoryDTO> convertedList = categories.Select(category => new CategoryDTO
+    {
+      Name = category.Name,
+      IsPrimary = category.IsPrimary
+    }).ToList();
+
+    return convertedList;
   }
 
-  public async Task<Category> CreateCategoryAsync(Category category)
+  public Task<List<CategoryDTO>> GetAllCategoriesAsync()
   {
+    return Task.FromResult(ConvertToDTOs(_context.Categories.ToList()));
+  }
+
+  public async Task<Category> CreateCategoryAsync(CategoryDTO categoryDto)
+  {
+
+    Category category = new()
+    {
+      Name = categoryDto.Name,
+      IsPrimary = categoryDto.IsPrimary
+    };
+
     _context.Categories.Add(category);
     await _context.SaveChangesAsync();
     return category;
+  }
+
+  public async Task<Category?> GetCategoryById(int id)
+  {
+    return _context.Categories.FirstOrDefault(c => c.Id == id);
   }
 }

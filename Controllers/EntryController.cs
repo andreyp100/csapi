@@ -18,7 +18,7 @@ public class EntryController : ControllerBase
 
 
   [HttpGet("/entries")]
-  public Task<List<Entry>> GetAllAsync() =>
+  public Task<List<EntryDTO>> GetAllAsync() =>
     _entryService.GetAllAsync();
 
   [HttpGet("{id}")]

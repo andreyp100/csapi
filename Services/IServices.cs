@@ -2,13 +2,13 @@ using csapi.Models;
 
 public interface IEntryService
 {
-  Task<Entry> CreateAsync(EntryDTO entryDTO);
+  Task<EntryDTO> CreateAsync(EntryDTO entryDTO);
   Task<Entry?> GetAsync(int id);
-  Task<List<Entry>> GetAllAsync();
+  Task<List<EntryDTO>> GetAllAsync();
 }
 
 public interface ICategoryService
 {
-  Task<Category> CreateCategoryAsync(Category category);
+  Task<Category> CreateCategoryAsync(CategoryDTO categoryDto);
   Task<List<CategoryDTO>> GetAllCategoriesAsync();
 }

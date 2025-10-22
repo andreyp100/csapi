@@ -1,5 +1,6 @@
 using csapi.Models;
 using csapi.Services;
+using System.Linq;
 
 public class CategoryService: ICategoryService
 {
@@ -10,9 +11,20 @@ public class CategoryService: ICategoryService
     _context = context;
   }
 
-  public Task<List<Category>> GetAllCategoriesAsync()
+  public List<CategoryDTO> ConvertToDTOs(List<Category> categories)
   {
-    return Task.FromResult(_context.Categories.ToList());
+    List<CategoryDTO> convertedList = categories.Select(category => new CategoryDTO
+    {
+      Name = category.Name,
+      IsPrimary = category.IsPrimary
+    }).ToList();
+
+    return convertedList;
+  }
+
+  public Task<List<CategoryDTO>> GetAllCategoriesAsync()
+  {
+    return Task.FromResult(ConvertToDTOs(_context.Categories.ToList()));
   }
 
   public async Task<Category> CreateCategoryAsync(Category category)

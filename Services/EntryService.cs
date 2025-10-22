@@ -3,7 +3,7 @@ using csapi.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 namespace csapi.Services;
 
-public class EntryService: IEntryService
+public class EntryService : IEntryService
 {
   // static List<Entry> Entries { get; }
   // static int nextId = 3;
@@ -18,13 +18,25 @@ public class EntryService: IEntryService
 
   public Task<List<Entry>> GetAllAsync()
   {
-   return Task.FromResult(_context.Entries.ToList());
-  } 
+    return Task.FromResult(_context.Entries.ToList());
+  }
 
   public Task<Entry?> GetAsync(int id) => Task.FromResult(_context.Entries.FirstOrDefault(e => e.Id == id));
 
-  public async Task<Entry> CreateAsync(Entry entry)
+  public async Task<Entry> CreateAsync(EntryDTO entrydto)
   {
+
+    DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(entrydto.Date);
+    DateTime localDateTime = dateTimeOffset.UtcDateTime;
+
+    Entry entry = new()
+    {
+      Name = entrydto.Name,
+      Sum = entrydto.Sum,
+      Date = localDateTime,
+      CategoryId = entrydto.CategoryId,
+      DateCreated = DateTime.UtcNow
+    };
 
     _context.Entries.Add(entry);
     await _context.SaveChangesAsync();

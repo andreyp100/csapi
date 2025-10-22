@@ -2,7 +2,7 @@ using csapi.Models;
 
 public interface IEntryService
 {
-  Task<Entry> CreateAsync(Entry entry);
+  Task<Entry> CreateAsync(EntryDTO entryDTO);
   Task<Entry?> GetAsync(int id);
   Task<List<Entry>> GetAllAsync();
 }
@@ -10,5 +10,5 @@ public interface IEntryService
 public interface ICategoryService
 {
   Task<Category> CreateCategoryAsync(Category category);
-  Task<List<Category>> GetAllCategoriesAsync();
+  Task<List<CategoryDTO>> GetAllCategoriesAsync();
 }

@@ -17,7 +17,7 @@ public class EntryController : ControllerBase
   }
 
 
-  [HttpGet]
+  [HttpGet("/entries")]
   public Task<List<Entry>> GetAllAsync() =>
     _entryService.GetAllAsync();
 
@@ -36,20 +36,7 @@ public class EntryController : ControllerBase
   public async Task<IActionResult> CreateAsync([FromBody] EntryDTO entrydto)
   {
 
-    DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(entrydto.Date);
-    DateTime localDateTime = dateTimeOffset.UtcDateTime;
-
-    Entry entry = new()
-    {
-      Name = entrydto.Name,
-      Sum = entrydto.Sum,
-      Date = localDateTime,
-      CategoryId = entrydto.CategoryId,
-      DateCreated = DateTime.UtcNow
-    };
-
-
-    var result = await _entryService.CreateAsync(entry);
+    var result = await _entryService.CreateAsync(entrydto);
     return Ok(result);
   }
 

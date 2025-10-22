@@ -14,7 +14,7 @@ public class CategoryController: ControllerBase
   }
 
   [HttpGet("/categories/list")]
-  public Task<List<Category>> GetCategoriesAsync() =>
+  public Task<List<CategoryDTO>> GetCategoriesAsync() =>
     _categoryService.GetAllCategoriesAsync();
 
 

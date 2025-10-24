@@ -7,7 +7,7 @@ public class Category
   public int Id { get; set; }
   public string Name { get; set; }
   public bool IsPrimary { get; set; }
-  // [ForeignKey("CategoryId")]
+  public int Limit { get; set; }
   public ICollection<Entry> Entries { get; set; }
 }
 
@@ -15,5 +15,6 @@ public class CategoryDTO
 {
   public string Name { get; set; }
   public bool IsPrimary { get; set; }
+  public int Limit { get; set; }
   public int EntriesCount { get; set; }
 }

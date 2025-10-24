@@ -1,4 +1,5 @@
 using csapi.Models;
+using Microsoft.Extensions.Localization;
 
 public interface IEntryService
 {
@@ -11,4 +12,5 @@ public interface ICategoryService
 {
   Task<Category> CreateCategoryAsync(CategoryDTO categoryDto);
   Task<List<CategoryDTO>> GetAllCategoriesAsync();
+  Task<CategoryDTO> AddCategoryLimitAsync(string name, int limit);
 }

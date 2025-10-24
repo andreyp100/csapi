@@ -37,7 +37,7 @@ public class EntryService : IEntryService
   }
 
   public Task<Entry?> GetAsync(int id) => Task.FromResult(_context.Entries.FirstOrDefault(e => e.Id == id));
- 
+
 
   public async Task<EntryDTO> CreateAsync(EntryDTO entrydto)
   {
@@ -68,7 +68,7 @@ public class EntryService : IEntryService
       Name = entry.Name,
       Sum = entry.Sum,
       Date = entrydto.Date,
-CategoryName = entrydto.CategoryName
+      CategoryName = entrydto.CategoryName
 
     };
   }

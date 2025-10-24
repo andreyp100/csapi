@@ -33,12 +33,34 @@ public class CategoryService : ICategoryService
     Category category = new()
     {
       Name = categoryDto.Name,
-      IsPrimary = categoryDto.IsPrimary
+      IsPrimary = categoryDto.IsPrimary,
+      Limit = categoryDto.Limit
     };
 
     _context.Categories.Add(category);
     await _context.SaveChangesAsync();
     return category;
+  }
+
+  public async Task<CategoryDTO> AddCategoryLimitAsync(string name, int limit)
+  {
+    Category category = _context.Categories.FirstOrDefault(c => c.Name == name);
+
+    if (category == null)
+    {
+      throw new ArgumentException("category not found");
+    }
+
+    category.Limit = limit;
+    _context.SaveChanges();
+
+    return new CategoryDTO()
+    {
+      Name = category.Name,
+      IsPrimary = category.IsPrimary,
+      Limit = category.Limit
+    };
+
   }
 
   public async Task<Category?> GetCategoryById(int id)

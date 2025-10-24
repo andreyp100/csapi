@@ -16,7 +16,8 @@ public class CategoryService : ICategoryService
     List<CategoryDTO> convertedList = categories.Select(category => new CategoryDTO
     {
       Name = category.Name,
-      IsPrimary = category.IsPrimary
+      IsPrimary = category.IsPrimary,
+      Limit = category.Limit
     }).ToList();
 
     return convertedList;
@@ -42,16 +43,19 @@ public class CategoryService : ICategoryService
     return category;
   }
 
-  public async Task<CategoryDTO> AddCategoryLimitAsync(string name, int limit)
+  public async Task<CategoryDTO> EditCategoryAsync(string categoryName, CategoryDTO updatedDTO)
   {
-    Category category = _context.Categories.FirstOrDefault(c => c.Name == name);
+    Category category = _context.Categories.FirstOrDefault(c => c.Name == categoryName);
 
     if (category == null)
     {
       throw new ArgumentException("category not found");
     }
 
-    category.Limit = limit;
+    category.Name = updatedDTO.Name;
+    category.IsPrimary = updatedDTO.IsPrimary;
+    category.Limit = updatedDTO.Limit;
+
     _context.SaveChanges();
 
     return new CategoryDTO()
@@ -60,7 +64,6 @@ public class CategoryService : ICategoryService
       IsPrimary = category.IsPrimary,
       Limit = category.Limit
     };
-
   }
 
   public async Task<Category?> GetCategoryById(int id)

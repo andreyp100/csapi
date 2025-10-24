@@ -25,4 +25,12 @@ public class CategoryController: ControllerBase
     var result = await _categoryService.CreateCategoryAsync(categoryDto);
     return Ok(result);
   }
+
+  [HttpPost("/category/edit")]
+  public async Task<IActionResult> EditCategoryAsync([FromBody]CategoryDTO categoryDTO)
+  {
+
+    var result = await _categoryService.CreateCategoryAsync(categoryDTO);
+    return Ok(result);
+  }
 }

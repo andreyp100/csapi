@@ -1,6 +1,7 @@
 using csapi.Models;
 using csapi.Services;
 using System.Linq;
+using csapi.ErrorExceptions;
 
 public class CategoryService : ICategoryService
 {
@@ -31,7 +32,16 @@ public class CategoryService : ICategoryService
   public async Task<Category> CreateCategoryAsync(CategoryDTO categoryDto)
   {
 
-    Category category = new()
+    Category category;
+
+    category = _context.Categories.FirstOrDefault(c => c.Name == categoryDto.Name);
+
+    if (category != null)
+    {
+      throw new CategoryError($"Category name '{categoryDto.Name}' already exists");
+    }
+
+    category = new()
     {
       Name = categoryDto.Name,
       IsPrimary = categoryDto.IsPrimary,
@@ -43,18 +53,20 @@ public class CategoryService : ICategoryService
     return category;
   }
 
-  public async Task<CategoryDTO> EditCategoryAsync(string categoryName, CategoryDTO updatedDTO)
+  public async Task<CategoryDTO> EditCategoryAsync(EditedCategoryDTO editedCategoryDTO)
   {
-    Category category = _context.Categories.FirstOrDefault(c => c.Name == categoryName);
+    Category category = _context.Categories.FirstOrDefault(c => c.Name == editedCategoryDTO.OriginalName);
+
 
     if (category == null)
     {
-      throw new ArgumentException("category not found");
+      throw new CategoryError($"Category does not exist");
     }
 
-    category.Name = updatedDTO.Name;
-    category.IsPrimary = updatedDTO.IsPrimary;
-    category.Limit = updatedDTO.Limit;
+
+    category.Name = editedCategoryDTO.Name;
+    category.IsPrimary = editedCategoryDTO.IsPrimary;
+    category.Limit = editedCategoryDTO.Limit;
 
     _context.SaveChanges();
 

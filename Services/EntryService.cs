@@ -49,7 +49,7 @@ public class EntryService : IEntryService
 
     if (category == null)
     {
-      throw new ArgumentException("category not found");
+      throw new ArgumentException($"category {entrydto.CategoryName} not found");
     }
 
     Entry entry = new()

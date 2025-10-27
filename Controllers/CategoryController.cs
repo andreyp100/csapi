@@ -1,6 +1,9 @@
+using csapi.ErrorExceptions;
 using csapi.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 namespace csapi.Controllers;
+
 
 [ApiController]
 [Route("[controller]")]
@@ -21,16 +24,28 @@ public class CategoryController: ControllerBase
   [HttpPost("/category/add")]
   public async Task<IActionResult> CreateCategoryAsync([FromBody] CategoryDTO categoryDto)
   {
-
-    var result = await _categoryService.CreateCategoryAsync(categoryDto);
-    return Ok(result);
+    try
+    {
+      var result = await _categoryService.CreateCategoryAsync(categoryDto);
+      return Created("/category/add", result);
+    }
+    catch (CategoryError error)
+    {
+      return Conflict(new ErrorResponse(error));
+    }
   }
 
   [HttpPost("/category/edit")]
-  public async Task<IActionResult> EditCategoryAsync([FromBody]CategoryDTO categoryDTO)
+  public async Task<IActionResult> EditCategoryAsync([FromBody]EditedCategoryDTO editedCategoryDTO)
   {
-
-    var result = await _categoryService.CreateCategoryAsync(categoryDTO);
-    return Ok(result);
+    try
+    {
+      var result = await _categoryService.EditCategoryAsync(editedCategoryDTO);
+      return Ok(result);
+    }
+    catch (CategoryError error)
+    {
+       return Conflict(new ErrorResponse(error));
+    }
   }
 }

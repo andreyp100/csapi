@@ -18,3 +18,8 @@ public class CategoryDTO
   public int Limit { get; set; }
   public int EntriesCount { get; set; }
 }
+
+public class EditedCategoryDTO: CategoryDTO
+{
+  public string OriginalName { get; set; }
+}

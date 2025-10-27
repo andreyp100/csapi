@@ -12,5 +12,5 @@ public interface ICategoryService
 {
   Task<Category> CreateCategoryAsync(CategoryDTO categoryDto);
   Task<List<CategoryDTO>> GetAllCategoriesAsync();
-  Task<CategoryDTO> EditCategoryAsync(string categoryName, CategoryDTO updatedCategory);
+  Task<CategoryDTO> EditCategoryAsync(EditedCategoryDTO editedCategoryDTO);
 }

@@ -2,6 +2,7 @@ using csapi.Models;
 using csapi.Services;
 using System.Linq;
 using csapi.ErrorExceptions;
+using Microsoft.EntityFrameworkCore;
 
 public class CategoryService : ICategoryService
 {
@@ -26,7 +27,9 @@ public class CategoryService : ICategoryService
 
   public Task<List<CategoryDTO>> GetAllCategoriesAsync()
   {
-    return Task.FromResult(ConvertToDTOs(_context.Categories.ToList()));
+    return Task.FromResult(ConvertToDTOs(_context.Categories
+                                                    .OrderByDescending(c => c.Limit)
+                                                    .ToList()));
   }
 
   public async Task<Category> CreateCategoryAsync(CategoryDTO categoryDto)
@@ -40,7 +43,7 @@ public class CategoryService : ICategoryService
     {
       throw new CategoryError($"Category name '{categoryDto.Name}' already exists");
     }
-
+  
     category = new()
     {
       Name = categoryDto.Name,
@@ -81,5 +84,19 @@ public class CategoryService : ICategoryService
   public async Task<Category?> GetCategoryById(int id)
   {
     return _context.Categories.FirstOrDefault(c => c.Id == id);
+  }
+
+  public async Task<CategoryDTO> DeleteCategoryAsync(CategoryDTO categoryDTO)
+  {
+    Category category = _context.Categories.FirstOrDefault(c => c.Name == categoryDTO.Name);
+
+    if (category == null)
+    {
+      throw new CategoryError($"Category does not exist");
+    }
+    _context.Categories.Remove(category);
+    await _context.SaveChangesAsync();
+    return categoryDTO;
+    
   }
 }

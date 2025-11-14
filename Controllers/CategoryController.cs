@@ -48,4 +48,20 @@ public class CategoryController: ControllerBase
        return Conflict(new ErrorResponse(error));
     }
   }
+
+  [HttpDelete("/category/delete")]
+  public async Task<IActionResult> DeleteCategoryAsync([FromBody] CategoryDTO categoryDTO)
+  {
+    Console.WriteLine("processing delete");
+    try
+    {
+      var result = await _categoryService.DeleteCategoryAsync(categoryDTO);
+      return NoContent();
+    }
+    catch (CategoryError error)
+    {
+      Console.WriteLine("error");
+      return Conflict(new ErrorResponse(error));
+    }
+  }
 }

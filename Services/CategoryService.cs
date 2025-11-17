@@ -17,6 +17,7 @@ public class CategoryService : ICategoryService
   {
     List<CategoryDTO> convertedList = categories.Select(category => new CategoryDTO
     {
+      Id = category.Id,
       Name = category.Name,
       IsPrimary = category.IsPrimary,
       Limit = category.Limit
@@ -56,9 +57,9 @@ public class CategoryService : ICategoryService
     return category;
   }
 
-  public async Task<CategoryDTO> EditCategoryAsync(EditedCategoryDTO editedCategoryDTO)
+  public async Task<CategoryDTO> EditCategoryAsync(CategoryDTO categoryDTO)
   {
-    Category category = _context.Categories.FirstOrDefault(c => c.Name == editedCategoryDTO.OriginalName);
+    Category category = _context.Categories.FirstOrDefault(c => c.Id == categoryDTO.Id);
 
 
     if (category == null)
@@ -67,9 +68,9 @@ public class CategoryService : ICategoryService
     }
 
 
-    category.Name = editedCategoryDTO.Name;
-    category.IsPrimary = editedCategoryDTO.IsPrimary;
-    category.Limit = editedCategoryDTO.Limit;
+    category.Name = categoryDTO.Name;
+    category.IsPrimary = categoryDTO.IsPrimary;
+    category.Limit = categoryDTO.Limit;
 
     _context.SaveChanges();
 
@@ -77,7 +78,8 @@ public class CategoryService : ICategoryService
     {
       Name = category.Name,
       IsPrimary = category.IsPrimary,
-      Limit = category.Limit
+      Limit = category.Limit,
+      Id = category.Id
     };
   }
 
@@ -86,14 +88,21 @@ public class CategoryService : ICategoryService
     return _context.Categories.FirstOrDefault(c => c.Id == id);
   }
 
-  public async Task<CategoryDTO> DeleteCategoryAsync(CategoryDTO categoryDTO)
+  public async Task<CategoryDTO> DeleteCategoryAsync(int id)
   {
-    Category category = _context.Categories.FirstOrDefault(c => c.Name == categoryDTO.Name);
+    Category category = await GetCategoryById(id);
 
     if (category == null)
     {
       throw new CategoryError($"Category does not exist");
     }
+
+    CategoryDTO categoryDTO = new CategoryDTO()
+    {
+      Id = category.Id,
+      Name = category.Name,
+    };
+
     _context.Categories.Remove(category);
     await _context.SaveChangesAsync();
     return categoryDTO;

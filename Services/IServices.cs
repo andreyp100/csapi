@@ -12,6 +12,6 @@ public interface ICategoryService
 {
   Task<Category> CreateCategoryAsync(CategoryDTO categoryDto);
   Task<List<CategoryDTO>> GetAllCategoriesAsync();
-  Task<CategoryDTO> EditCategoryAsync(EditedCategoryDTO editedCategoryDTO);
-  Task<CategoryDTO> DeleteCategoryAsync(CategoryDTO categoryDTO);
+  Task<CategoryDTO> EditCategoryAsync(CategoryDTO categoryDto);
+  Task<CategoryDTO> DeleteCategoryAsync(int id);
 }

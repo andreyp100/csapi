@@ -36,11 +36,11 @@ public class CategoryController: ControllerBase
   }
 
   [HttpPost("/category/edit")]
-  public async Task<IActionResult> EditCategoryAsync([FromBody]EditedCategoryDTO editedCategoryDTO)
+  public async Task<IActionResult> EditCategoryAsync([FromBody]CategoryDTO categoryDTO)
   {
     try
     {
-      var result = await _categoryService.EditCategoryAsync(editedCategoryDTO);
+      var result = await _categoryService.EditCategoryAsync(categoryDTO);
       return Ok(result);
     }
     catch (CategoryError error)
@@ -49,14 +49,13 @@ public class CategoryController: ControllerBase
     }
   }
 
-  [HttpDelete("/category/delete")]
-  public async Task<IActionResult> DeleteCategoryAsync([FromBody] CategoryDTO categoryDTO)
+  [HttpDelete("/category/delete/{id}")]
+  public async Task<IActionResult> DeleteCategoryAsync(int id)
   {
-    Console.WriteLine("processing delete");
     try
     {
-      var result = await _categoryService.DeleteCategoryAsync(categoryDTO);
-      return NoContent();
+      var result = await _categoryService.DeleteCategoryAsync(id);
+      return Ok(result);
     }
     catch (CategoryError error)
     {

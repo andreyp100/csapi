@@ -13,14 +13,10 @@ public class Category
 
 public class CategoryDTO
 {
+  public int Id {get; set;}
   public string Name { get; set; }
   public bool IsPrimary { get; set; }
   public int Limit { get; set; }
   public int EntriesCount { get; set; }
   public int CurrentSpent {get; set;}
-}
-
-public class EditedCategoryDTO: CategoryDTO
-{
-  public string OriginalName { get; set; }
 }

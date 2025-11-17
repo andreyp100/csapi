@@ -18,5 +18,6 @@ public class CategoryDTO
   public bool IsPrimary { get; set; }
   public int Limit { get; set; }
   public int EntriesCount { get; set; }
-  public int CurrentSpent {get; set;}
+  public float CurrentSpent {get; set;}
+  public float Left => Limit - CurrentSpent;
 }

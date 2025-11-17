@@ -3,6 +3,7 @@ using csapi.Services;
 using System.Linq;
 using csapi.ErrorExceptions;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 public class CategoryService : ICategoryService
 {
@@ -20,7 +21,9 @@ public class CategoryService : ICategoryService
       Id = category.Id,
       Name = category.Name,
       IsPrimary = category.IsPrimary,
-      Limit = category.Limit
+      Limit = category.Limit,
+      EntriesCount = _context.Entries.Count(e => e.CategoryId == category.Id),
+      CurrentSpent = GetCurrentCategorySpent(category.Id)
     }).ToList();
 
     return convertedList;
@@ -33,7 +36,7 @@ public class CategoryService : ICategoryService
                                                     .ToList()));
   }
 
-  public async Task<Category> CreateCategoryAsync(CategoryDTO categoryDto)
+  public async Task<CategoryDTO> CreateCategoryAsync(CategoryDTO categoryDto)
   {
 
     Category category;
@@ -49,12 +52,22 @@ public class CategoryService : ICategoryService
     {
       Name = categoryDto.Name,
       IsPrimary = categoryDto.IsPrimary,
-      Limit = categoryDto.Limit
+      Limit = categoryDto.Limit,
     };
 
     _context.Categories.Add(category);
     await _context.SaveChangesAsync();
-    return category;
+
+    categoryDto.Id = category.Id;
+    categoryDto.CurrentSpent = 0;
+
+    return categoryDto;
+  }
+
+  public float GetCurrentCategorySpent(int categoryId)
+  {
+    float currentSpent = _context.Entries.Where(e => e.CategoryId == categoryId).Sum(e => e.Sum);
+    return currentSpent;
   }
 
   public async Task<CategoryDTO> EditCategoryAsync(CategoryDTO categoryDTO)
@@ -79,7 +92,8 @@ public class CategoryService : ICategoryService
       Name = category.Name,
       IsPrimary = category.IsPrimary,
       Limit = category.Limit,
-      Id = category.Id
+      Id = category.Id,
+      CurrentSpent = GetCurrentCategorySpent(category.Id)
     };
   }
 

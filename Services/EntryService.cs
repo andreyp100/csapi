@@ -67,7 +67,6 @@ public class EntryService : IEntryService
       Sum = entry.Sum,
       Date = entrydto.Date,
       CategoryName = entrydto.CategoryName
-
     };
   }
 

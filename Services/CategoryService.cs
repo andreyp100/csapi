@@ -3,7 +3,6 @@ using csapi.Services;
 using System.Linq;
 using csapi.ErrorExceptions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 public class CategoryService : ICategoryService
 {
@@ -32,7 +31,8 @@ public class CategoryService : ICategoryService
   public Task<List<CategoryDTO>> GetAllCategoriesAsync()
   {
     return Task.FromResult(ConvertToDTOs(_context.Categories
-                                                    .OrderByDescending(c => c.Limit)
+                                                    .OrderByDescending(c => c.IsPrimary)
+                                                    .ThenByDescending(c => c.Limit)
                                                     .ToList()));
   }
 

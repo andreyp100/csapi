@@ -29,7 +29,7 @@ public class CategoryController: ControllerBase
       var result = await _categoryService.CreateCategoryAsync(categoryDto);
       return Created("/category/add", result);
     }
-    catch (CategoryError error)
+    catch (AlreadyExistsError error)
     {
       return Conflict(new ErrorResponse(error));
     }
@@ -43,7 +43,7 @@ public class CategoryController: ControllerBase
       var result = await _categoryService.EditCategoryAsync(categoryDTO);
       return Ok(result);
     }
-    catch (CategoryError error)
+    catch (AlreadyExistsError error)
     {
        return Conflict(new ErrorResponse(error));
     }
@@ -57,7 +57,7 @@ public class CategoryController: ControllerBase
       var result = await _categoryService.DeleteCategoryAsync(id);
       return Ok(result);
     }
-    catch (CategoryError error)
+    catch (AlreadyExistsError error)
     {
       Console.WriteLine("error");
       return Conflict(new ErrorResponse(error));

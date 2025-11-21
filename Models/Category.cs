@@ -23,4 +23,5 @@ public class CategoryDTO
   public int EntriesCount { get; set; }
   public float CurrentSpent {get; set;}
   public float Left => Limit - CurrentSpent;
+  public LocalDate Month;
 }

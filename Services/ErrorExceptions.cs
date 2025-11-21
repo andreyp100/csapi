@@ -10,9 +10,9 @@ namespace csapi.ErrorExceptions
     }
   }
 
-  public class CategoryError : ErrorException
+  public class AlreadyExistsError : ErrorException
   {
-    public CategoryError(string message) : base(message, StatusCodes.Status409Conflict) { }
+    public AlreadyExistsError(string message) : base(message, StatusCodes.Status409Conflict) { }
   }
 
   public class ErrorResponse

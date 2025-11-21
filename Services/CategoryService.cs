@@ -22,7 +22,8 @@ public class CategoryService : ICategoryService
       IsPrimary = category.IsPrimary,
       Limit = category.Limit,
       EntriesCount = _context.Entries.Count(e => e.CategoryId == category.Id),
-      CurrentSpent = GetCurrentCategorySpent(category.Id)
+      CurrentSpent = GetCurrentCategorySpent(category.Id),
+      Month = category.DateRange.UpperBound
     }).ToList();
 
     return convertedList;
@@ -45,7 +46,7 @@ public class CategoryService : ICategoryService
 
     if (category != null)
     {
-      throw new CategoryError($"Category name '{categoryDto.Name}' already exists");
+      throw new AlreadyExistsError($"Category name '{categoryDto.Name}' already exists");
     }
   
     category = new()
@@ -77,7 +78,7 @@ public class CategoryService : ICategoryService
 
     if (category == null)
     {
-      throw new CategoryError($"Category does not exist");
+      throw new AlreadyExistsError($"Category does not exist");
     }
 
 
@@ -108,7 +109,7 @@ public class CategoryService : ICategoryService
 
     if (category == null)
     {
-      throw new CategoryError($"Category does not exist");
+      throw new AlreadyExistsError($"Category does not exist");
     }
 
     CategoryDTO categoryDTO = new CategoryDTO()

@@ -15,3 +15,8 @@ public interface ICategoryService
   Task<CategoryDTO> EditCategoryAsync(CategoryDTO categoryDto);
   Task<CategoryDTO> DeleteCategoryAsync(int id);
 }
+
+public interface IUserService
+{
+  Task<UserDTO> CreateUserAsync(UserDTO user);
+}

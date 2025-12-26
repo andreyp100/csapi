@@ -3,6 +3,9 @@ using csapi.Services;
 using System.Linq;
 using csapi.ErrorExceptions;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
+using NpgsqlTypes;
+using System.Globalization;
 
 public class CategoryService : ICategoryService
 {
@@ -15,15 +18,24 @@ public class CategoryService : ICategoryService
 
   public List<CategoryDTO> ConvertToDTOs(List<Category> categories)
   {
-    List<CategoryDTO> convertedList = categories.Select(category => new CategoryDTO
+    List<CategoryDTO> convertedList = categories.Select(category =>
     {
-      Id = category.Id,
-      Name = category.Name,
-      IsPrimary = category.IsPrimary,
-      Limit = category.Limit,
-      EntriesCount = _context.Entries.Count(e => e.CategoryId == category.Id),
-      CurrentSpent = GetCurrentCategorySpent(category.Id),
-      Month = category.DateRange.UpperBound
+
+      DateTimeZone zone = DateTimeZoneProviders.Tzdb["Europe/Moscow"];
+      LocalDateTime localDateTime = category.DateRange.UpperBound.AtMidnight();
+      ZonedDateTime zonedDateTime = localDateTime.InZoneStrictly(zone);
+      long milliseconds = zonedDateTime.ToInstant().ToUnixTimeMilliseconds();
+
+      return new CategoryDTO
+      {
+        Id = category.Id,
+        Name = category.Name,
+        IsPrimary = category.IsPrimary,
+        Limit = category.Limit,
+        EntriesCount = _context.Entries.Count(e => e.CategoryId == category.Id),
+        CurrentSpent = GetCurrentCategorySpent(category),
+        MonthYear = milliseconds
+      };
     }).ToList();
 
     return convertedList;
@@ -48,12 +60,21 @@ public class CategoryService : ICategoryService
     {
       throw new AlreadyExistsError($"Category name '{categoryDto.Name}' already exists");
     }
-  
+
+    long milliseconds = categoryDto.MonthYear;
+    Instant instant = Instant.FromUnixTimeMilliseconds(milliseconds);
+    DateTimeZone zone = DateTimeZone.Utc;
+    ZonedDateTime zonedDateTime = instant.InZone(zone);
+    LocalDate localDate = zonedDateTime.Date;
+    int lowerMonth = localDate.Month == 1 ? 12 : localDate.Month - 1;
+    int lowerYear = localDate.Year - Convert.ToInt32(lowerMonth == 12);
+
     category = new()
     {
       Name = categoryDto.Name,
       IsPrimary = categoryDto.IsPrimary,
       Limit = categoryDto.Limit,
+      DateRange = new NpgsqlRange<LocalDate>(new LocalDate(lowerYear, lowerMonth, 19), new LocalDate(localDate.Year, localDate.Month, 4))
     };
 
     _context.Categories.Add(category);
@@ -62,12 +83,13 @@ public class CategoryService : ICategoryService
     categoryDto.Id = category.Id;
     categoryDto.CurrentSpent = 0;
 
+
     return categoryDto;
   }
 
-  public float GetCurrentCategorySpent(int categoryId)
+  public float GetCurrentCategorySpent(Category category)
   {
-    float currentSpent = _context.Entries.Where(e => e.CategoryId == categoryId).Sum(e => e.Sum);
+    float currentSpent = _context.Entries.Where(e => e.CategoryId == category.Id).Sum(e => e.Sum);
     return currentSpent;
   }
 
@@ -94,7 +116,7 @@ public class CategoryService : ICategoryService
       IsPrimary = category.IsPrimary,
       Limit = category.Limit,
       Id = category.Id,
-      CurrentSpent = GetCurrentCategorySpent(category.Id)
+      CurrentSpent = GetCurrentCategorySpent(category)
     };
   }
 
@@ -121,6 +143,6 @@ public class CategoryService : ICategoryService
     _context.Categories.Remove(category);
     await _context.SaveChangesAsync();
     return categoryDTO;
-    
+
   }
 }

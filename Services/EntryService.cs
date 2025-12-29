@@ -17,7 +17,8 @@ public class EntryService : IEntryService
       Name = entry.Name,
       Sum = entry.Sum,
       Date = new DateTimeOffset(entry.Date.ToUniversalTime()).ToUnixTimeMilliseconds(),
-      CategoryName = _context.Categories.FirstOrDefault(c => c.Id == entry.CategoryId).Name
+      CategoryName = _context.Categories.FirstOrDefault(c => c.Id == entry.CategoryId).Name,
+      Info = entry.Info
     }).ToList();
 
     return convertedList;
@@ -56,6 +57,7 @@ public class EntryService : IEntryService
       Sum = entrydto.Sum,
       Date = localDateTime,
       CategoryId = category.Id,
+      Info = entrydto.Info,
       DateCreated = DateTime.UtcNow
     };
 
@@ -66,7 +68,8 @@ public class EntryService : IEntryService
       Name = entry.Name,
       Sum = entry.Sum,
       Date = entrydto.Date,
-      CategoryName = entrydto.CategoryName
+      CategoryName = entrydto.CategoryName,
+      Info = entrydto.Info
     };
   }
 

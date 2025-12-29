@@ -11,7 +11,10 @@ public class Category
   public bool IsPrimary { get; set; }
   public int Limit { get; set; }
   public ICollection<Entry> Entries { get; set; }
-  public NpgsqlRange<LocalDate> DateRange {get; set;}
+  public int CategoryMonth {get; set;}
+  public int CategoryYear {get; set;}
+  public DateTime CategoryStartDate {get; set;}
+  public DateTime CategoryEndDate {get; set; }
 }
 
 public class CategoryDTO
@@ -23,5 +26,11 @@ public class CategoryDTO
   public int EntriesCount { get; set; }
   public float CurrentSpent {get; set;}
   public float Left => Limit - CurrentSpent;
-  public long MonthYear {get; set;}
+  public CategoryMonth CategoryMonth {get; set;}
+}
+
+public class CategoryMonth
+{
+  public int MonthNumber {get; set;}
+  public int Year {get; set;}
 }

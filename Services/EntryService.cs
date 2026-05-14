@@ -6,8 +6,6 @@ namespace csapi.Services;
 
 public class EntryService : IEntryService
 {
-  // static List<Entry> Entries { get; }
-  // static int nextId = 3;
 
   private readonly AppDbContext _context;
 
@@ -19,7 +17,8 @@ public class EntryService : IEntryService
       Name = entry.Name,
       Sum = entry.Sum,
       Date = new DateTimeOffset(entry.Date.ToUniversalTime()).ToUnixTimeMilliseconds(),
-      CategoryName = _context.Categories.FirstOrDefault(c => c.Id == entry.CategoryId).Name
+      CategoryName = _context.Categories.FirstOrDefault(c => c.Id == entry.CategoryId).Name,
+      Info = entry.Info
     }).ToList();
 
     return convertedList;
@@ -58,6 +57,7 @@ public class EntryService : IEntryService
       Sum = entrydto.Sum,
       Date = localDateTime,
       CategoryId = category.Id,
+      Info = entrydto.Info,
       DateCreated = DateTime.UtcNow
     };
 
@@ -68,28 +68,10 @@ public class EntryService : IEntryService
       Name = entry.Name,
       Sum = entry.Sum,
       Date = entrydto.Date,
-      CategoryName = entrydto.CategoryName
-
+      CategoryName = entrydto.CategoryName,
+      Info = entrydto.Info
     };
   }
-
-  // public void Delete(int id)
-  // {
-  //   var entry = GetAsync(id);
-  //   if (entry is null)
-  //     return;
-
-  //   Entries.Remove(entry);
-  // }
-
-  // public static void Update(Entry entry)
-  // {
-  //   var index = Entries.FindIndex(e => e.Id == entry.Id);
-  //   if (index == -1)
-  //     return;
-
-  //   Entries[index] = entry;
-  // }
 
 
 

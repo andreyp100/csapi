@@ -29,23 +29,38 @@ public class CategoryController: ControllerBase
       var result = await _categoryService.CreateCategoryAsync(categoryDto);
       return Created("/category/add", result);
     }
-    catch (CategoryError error)
+    catch (AlreadyExistsError error)
     {
       return Conflict(new ErrorResponse(error));
     }
   }
 
   [HttpPost("/category/edit")]
-  public async Task<IActionResult> EditCategoryAsync([FromBody]EditedCategoryDTO editedCategoryDTO)
+  public async Task<IActionResult> EditCategoryAsync([FromBody]CategoryDTO categoryDTO)
   {
     try
     {
-      var result = await _categoryService.EditCategoryAsync(editedCategoryDTO);
+      var result = await _categoryService.EditCategoryAsync(categoryDTO);
       return Ok(result);
     }
-    catch (CategoryError error)
+    catch (AlreadyExistsError error)
     {
        return Conflict(new ErrorResponse(error));
+    }
+  }
+
+  [HttpDelete("/category/delete/{id}")]
+  public async Task<IActionResult> DeleteCategoryAsync(int id)
+  {
+    try
+    {
+      var result = await _categoryService.DeleteCategoryAsync(id);
+      return Ok(result);
+    }
+    catch (AlreadyExistsError error)
+    {
+      Console.WriteLine("error");
+      return Conflict(new ErrorResponse(error));
     }
   }
 }

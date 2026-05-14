@@ -2,17 +2,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NodaTime;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
 namespace csapi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251121130207_AddedUsersTable")]
+    partial class AddedUsersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,17 +34,8 @@ namespace csapi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CategoryEndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("CategoryMonth")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CategoryStartDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("CategoryYear")
-                        .HasColumnType("integer");
+                    b.Property<NpgsqlRange<LocalDate>>("DateRange")
+                        .HasColumnType("daterange");
 
                     b.Property<bool>("IsPrimary")
                         .HasColumnType("boolean");
@@ -93,10 +89,6 @@ namespace csapi.Migrations
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Info")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
